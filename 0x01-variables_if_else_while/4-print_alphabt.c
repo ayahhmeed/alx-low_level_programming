@@ -10,14 +10,15 @@
 
 int main(void)
 {
-char ch 'a';
+char low, e, q;
 
-while (ch <= 'z')
+e = 'e';
+q = 'q';
+
+for (low = 'a'; low <= 'z'; low++)
 {
-if (ch == 'e' || ch == 'q')
-ch++;
-putchar(ch);
-ch++;
+if (low != e && low != q)
+puthcar(low);
 }
 putchar('\n');
 return (0);
