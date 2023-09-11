@@ -10,23 +10,13 @@
 
 int main(void)
 {
-char ch = 'a';
-char CH = 'A';
+char i;
 
-/*print a - z*/
-while (ch <= 'z')
-{
-putchar(ch);
-ch++;
-}
+for(i = 'a'; i <= 'z'; i++)
+putchar(i);
 
-/*print A - Z*/
-while (CH <= 'Z')
-{
-putchar(CH)
-CH++;
-}
+for(i = 'A'; i <= 'Z'; i++)
+putchar(i);
 putchar('\n');
-
 return (0);
 }
