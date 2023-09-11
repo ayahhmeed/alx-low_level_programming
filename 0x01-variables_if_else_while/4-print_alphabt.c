@@ -12,16 +12,17 @@
 
 int main(void)
 {
+	int n = 97;
 
-char low, e, q;
-
-e = 'e';
-q = 'q';
-
-for (low = 'a'; low <= 'z'; low++)
+while (n <= 122)
 {
-if (low != e && low != q)
-puthcar(low);
+	if (n == 101 || n == 113)
+	{
+		n++;
+		continue;
+	}
+	putchar(n);
+	n++;
 }
 putchar('\n');
 return (0);
