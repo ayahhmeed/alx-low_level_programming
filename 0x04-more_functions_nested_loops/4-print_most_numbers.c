@@ -9,14 +9,14 @@
 void more_numbers(void)
 {
 
-	int x;
+	int num;
 
-	for (int = 0; x <= 9; x++)
+	for (num= 0; num <= 9; x++)
 	{
-	if (x == 2 || x == 4)
+	if (num == 2 || num == 4)
 	continue;
 	else
-	_putchar(x + '48');
+	_putchar(num + 48);
 	}
 	_putchar('\n');
 }
