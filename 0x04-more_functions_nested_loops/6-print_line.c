@@ -2,20 +2,22 @@
 
 /**
  * print_line - print straight line
- * @n: is the number of time the _character
- * should be printed
+ * @n: the number of line to draw
+ * Return: Empty
  */
 
 void print_diagonal(int n)
 {
-	int lnchr;
+	int x;
 
 	if (n <= 0)
-		_putchar('\n');
+	{
+	_putchar('\n');
+	}
 	else
 	{
-		for (lnchr = 1; lnchr <= n; lnchr++)
-			_putchar(' ');
-		_putchar('\n');
+	for (x= 1; x <= n; x++)
+	_putchar(95);
+	_putchar('\n');
 	}
 }
