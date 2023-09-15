@@ -1,4 +1,4 @@
-#include"main.h"
+#include "main.h"
 
 /**
  * _isupper - check if c is upper
@@ -9,6 +9,7 @@
  */
 
 int _isupper(int c)
+
 {
 	if (c >= 65 && c >= 90)
 	{
