@@ -4,16 +4,15 @@
  * print_square - prints a square, followed by a new line
  * @size: size of the square
  */
-
 void print_square(int size)
 {
-	int i, j;
-
 	if (size <= 0)
 	{
 		_putchar('\n');
 		return;
 	}
+
+	int i, j;
 
 	for (i = 0; i < size; i++)
 	{
@@ -21,7 +20,6 @@ void print_square(int size)
 			_putchar('#');
 		_putchar('\n');
 	}
-	_putchar('\n');
 }
 
 
