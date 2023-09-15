@@ -7,14 +7,21 @@
  */
 int main(void)
 {
-int i;
+	int i;
 
-for (i = 1; i <= 100; i++)
-printf(i % 3 ?
-i % 5 ? "%d " : "Buzz " :
-i % 5 ? "Fizz " : "FizzBuzz ");
+	for (i = 1; i <= 100; i++)
+	{
+		if (i % 3 == 0 && i % 5 == 0)
+			printf("FizzBuzz ");
+		else if (i % 3 == 0)
+			printf("Fizz ");
+		else if (i % 5 == 0)
+			printf("Buzz ");
+		else
+			printf("%d ", i);
+	}
 
-printf("\n");
-return (0);
+	printf("\n");
+	return (0);
 }
 
