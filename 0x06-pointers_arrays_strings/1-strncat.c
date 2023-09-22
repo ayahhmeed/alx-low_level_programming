@@ -7,22 +7,29 @@
  *
  * Return: void
  */
-void print_number(int n)
+
+/**
+ * _strncat - concatenates two strings
+ *
+ * @dest: First part of the resulting string
+ * @src: Second part of the resulting string
+ * @n: Maximum number of bytes to be used from @src
+ *
+ * Return: Pointer to the resulting string @dest
+ */
+char *_strncat(char *dest, char *src, int n)
 {
-    int i, res = n, digit, divisor = 1;
+    int dest_len = 0;
+    int i = 0;
 
-    if (n < 0)
+    // Find the length of the destination string
+    while (dest[dest_len] != '\0')
+        dest_len++;
+
+    // Append at most n characters from the source string to the destination string
+    while (n-- && src[i] != '\0')
     {
-        _putchar('-');
-        res = -n;
+        dest[dest_len] = src[i];
+        dest_len++;
+        i++;
     }
-
-    while (res / divisor >= 10)
-        divisor *= 10;
-
-    for (i = divisor; i >= 1; i = i / 10)
-    {
-        digit = (res / i) % 10;
-        _putchar(digit + '0');
-    }
-}
