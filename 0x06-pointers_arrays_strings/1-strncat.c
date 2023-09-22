@@ -1,24 +1,34 @@
 #include "main.h"
-#include <stdio.h>
-
 /**
- * _strncat - Concatenates two strings, up to n bytes of src.
- * @dest: The destination string.
- * @src: The source string.
- * @n: The maximum number of bytes to concatenate from src.
+ * print_number - prints an integer
+ * @n: integer to print
  *
- * Return: A pointer to the resulting string @dest.
+ * Return: void
  */
-char *_strncat(char *dest, const char *src, size_t n)
+void print_number(int n)
 {
-size_t dest_len = 0;
-while (dest[dest_len])
-dest_len++;
+    unsigned int nb;
 
-for (size_t i = 0; i < n && src[i]; i++)
-dest[dest_len++] = src[i];
+    if (n < 0)
+    {
+        _putchar('-');
+        nb = -n;
+    }
+    else
+    {
+        nb = n;
+    }
 
-dest[dest_len] = '\0';
-return (dest);
+    unsigned int divisor = 1;
+    while (nb / divisor > 9)
+        divisor *= 10;
+
+    while (divisor != 0)
+    {
+        int digit = nb / divisor;
+        _putchar(digit + '0');
+        nb %= divisor;
+        divisor /= 10;
+    }
 }
 
