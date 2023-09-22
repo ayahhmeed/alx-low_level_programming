@@ -9,39 +9,32 @@
  */
 void print_number(int n)
 {
-    if (n == 0)
-    {
-        _putchar('0');
-        return;
-    }
+  if (n < 0) {
+    _putchar('-');
+    n *= -1;
+  }
 
-    if (n == INT_MIN)
-    {
-        print_number(n / 10);
-        _putchar('8');
-        return;
-    }
+  int copy = n;
+  int count = 0;
 
-    if (n < 0)
-    {
-        _putchar('-');
-        n = -n;
-    }
+  while (copy != 0) {
+    copy /= 10;
+    count++;
+  }
 
-    int rev = 0, digit;
-    while (n != 0)
-    {
-        digit = n % 10;
-        rev = rev * 10 + digit;
-        n /= 10;
-    }
+  if (count == 0)
+    _putchar('0');
 
-    while (rev != 0)
-    {
-        digit = rev % 10;
-        _putchar(digit + '0');
-        rev /= 10;
-    }
+  int divisor = 1;
+  while (count > 1) {
+    divisor *= 10;
+    count--;
+  }
+
+  while (divisor >= 1) {
+    int digit = n / divisor;
+    _putchar(digit + '0');
+    n %= divisor;
+    divisor /= 10;
+  }
 }
-
-
