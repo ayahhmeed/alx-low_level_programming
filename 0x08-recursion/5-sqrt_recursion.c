@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * _sqrt_recursion - Returns the natural square root of a number
+ * _sqrt_recursion - Recursively computes the natural square root of a number
  * @n: The number to compute the square root of
  *
  * Return: The natural square root of n,
@@ -13,29 +13,22 @@ int _sqrt_recursion(int n)
         return (-1);
     if (n == 0 || n == 1)
         return (n);
-    return (sqrt_recursive(n, 1, n));
+    return (sqrt_helper(n, n/2));
 }
 
 /**
- * sqrt_recursive - Recursively computes the natural square root of a number
+ * sqrt_helper - Computes the natural square root of a number recursively
  * @n: The number to compute the square root of
- * @low: The lower bound of the search range
- * @high: The upper bound of the search range
+ * @i: The potential root to check
  *
  * Return: The natural square root of n,
  *         or -1 if n does not have a natural square root
  */
-int sqrt_recursive(int n, int low, int high)
+int sqrt_helper(int n, int i)
 {
-    int mid;
-
-    if (low > high)
+    if (i <= 0)
         return (-1);
-    mid = (low + high) / 2;
-    if (mid * mid == n)
-        return (mid);
-    else if (mid * mid > n)
-        return (sqrt_recursive(n, low, mid - 1));
-    else
-        return (sqrt_recursive(n, mid + 1, high));
+    if (i * i == n)
+        return (i);
+    return (sqrt_helper(n, i - 1));
 }
