@@ -11,7 +11,7 @@ int is_palindrome(char *s)
 {
     int len = strlen(s);
     
-    return (check_palindrome(s, len, 0));
+    return check_palindrome(s, len, 0);
 }
 
 /**
@@ -24,9 +24,13 @@ int is_palindrome(char *s)
  */
 int check_palindrome(char *s, int len, int i)
 {
-    if (i >= len/2)
-        return (1);
-    if (s[i] != s[len - i - 1])
-        return (0);
-    return (check_palindrome(s, len, i+1));
+    if (i < len/2)
+    {
+        if (s[i] != s[len - i - 1])
+            return 0;
+        
+        return check_palindrome(s, len, i+1);
+    }
+    
+    return 1;
 }
