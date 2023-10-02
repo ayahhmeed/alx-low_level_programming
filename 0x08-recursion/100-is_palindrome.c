@@ -1,35 +1,21 @@
-#include "main.h"
 #include <stdio.h>
 #include <string.h>
 
-/**
- * is_palindrome - Check if a string is a palindrome using recursion.
- *
- * @s: The string to check.
- * Return: 1 if the string is a palindrome, otherwise 0.
- */
-int is_palindrome(char *s)
+int is_palindrome(char *s, int start, int end)
 {
-    int len, i;
-
-    len = strlen(s);
-
-    if (len <= 1)
+    if (start >= end)
     {
-        /* If the length of the string is <= 1, it's a palindrome */
-        return (1);
+        // If the function has reached this point, the string is a palindrome
+        return 1;
     }
 
-    if (*s == s[len - 1])
+    if (s[start] != s[end])
     {
-        /* Recursively call is_palindrome() with s+1 and len-2 to exclude the 
-         * first and last characters of s */
-        return (is_palindrome(s + 1) && 1);
+        // If the first and last characters don't match, the string is not a palindrome
+        return 0;
     }
-    else
-    {
-        /* The string is not a palindrome if the first and last characters are not equal */
-        return (0);
-    }
-}
+
+    // Recursively check if the substring between the first and last characters is a palindrome
+    return is_palindrome(s, start + 1, end - 1);
+
 
