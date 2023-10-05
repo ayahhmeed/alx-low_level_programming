@@ -3,9 +3,11 @@
 #include <stdlib.h>
 
 /**
- * main - check the code for ALX School students.
+ * simple_print_buffer - prints buffer in hexa
+ * @buffer: the address of memory to print
+ * @size: the size of the memory to print
  *
- * Return: Always 0.
+ * Return: Nothing.
  */
 
 char *create_array(unsigned int size, char c)
