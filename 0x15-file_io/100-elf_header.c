@@ -1,6 +1,8 @@
-#include "main.h"
-
-#define MAX_BYTES 64
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <elf.h>
 
 /**
  * print_error_and_exit - prints an error message and exits with error code 98
@@ -8,79 +10,8 @@
  */
 void print_error_and_exit(char *error_msg)
 {
-	dprintf(STDERR_FILENO, "%s\n", error_msg);
-	exit(98);
-}
-
-/**
- * print_header_fields - prints out the fields of an ELF header
- * @ehdr: pointer to the elf header
- */
-void print_header_fields(Elf64_Ehdr *ehdr)
-{
-	printf("  Magic:   ");
-	for (int i = 0; i < EI_NIDENT; i++)
-		printf("%0.2x ", ehdr->e_ident[i]);
-	printf("\n");
-
-	printf("  Class:                             %s\n",
-	       ehdr->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" :
-	       ehdr->e_ident[EI_CLASS] == ELFCLASS64 ? "ELF64" : "Invalid ELF");
-
-	printf("  Data:                              %s\n",
-	       ehdr->e_ident[EI_DATA] == ELFDATA2LSB ? "2's complement, little endian" :
-	       ehdr->e_ident[EI_DATA] == ELFDATA2MSB ? "2's complement, big endian" : "Invalid ELF");
-
-	printf("  Version:                           %u (current)\n", ehdr->e_ident[EI_VERSION]);
-
-	printf("  OS/ABI:                            ");
-
-	switch (ehdr->e_ident[EI_OSABI])
-	{
-	case ELFOSABI_SYSV:
-		printf("UNIX - System V\n");
-		break;
-	case ELFOSABI_NETBSD:
-		printf("UNIX - NetBSD\n");
-		break;
-	case ELFOSABI_SOLARIS:
-		printf("UNIX - Solaris\n");
-		break;
-	case ELFOSABI_SORTIX:
-		printf("<unknown: 53>\n");
-		break;
-	default:
-		printf("Invalid ELF\n");
-		break;
-	}
-
-	printf("  ABI Version:                       %u\n", ehdr->e_ident[EI_ABIVERSION]);
-
-	printf("  Type:                              ");
-
-	switch (ehdr->e_type)
-	{
-	case ET_NONE:
-		printf("NONE (Unknown type)\n");
-		break;
-	case ET_REL:
-		printf("REL (Relocatable file)\n");
-		break;
-	case ET_EXEC:
-		printf("EXEC (Executable file)\n");
-		break;
-	case ET_DYN:
-		printf("DYN (Shared object file)\n");
-		break;
-	case ET_CORE:
-		printf("CORE (Core file)\n");
-		break;
-	default:
-		printf("Invalid ELF\n");
-		break;
-	}
-
-	printf("  Entry point address:               %#lx\n", ehdr->e_entry);
+    dprintf(STDERR_FILENO, "%s\n", error_msg);
+    exit(98);
 }
 
 /**
@@ -89,9 +20,84 @@ void print_header_fields(Elf64_Ehdr *ehdr)
  */
 void print_elf_header(Elf64_Ehdr *ehdr)
 {
-	printf("ELF Header:\n");
+    printf("ELF Header:\n");
+    printf("  Magic:   ");
+    for (int i = 0; i < EI_NIDENT; i++)
+    {
+        printf("%2.2x ", ehdr->e_ident[i]);
+    }
+    printf("\n");
 
-	print_header_fields(ehdr);
+    printf("  Class:                             ");
+    switch (ehdr->e_ident[EI_CLASS])
+    {
+    case ELFCLASS32:
+        printf("ELF32\n");
+        break;
+    case ELFCLASS64:
+        printf("ELF64\n");
+        break;
+    default:
+        printf("Invalid ELF class\n");
+        break;
+    }
+
+    printf("  Data:                              ");
+    switch (ehdr->e_ident[EI_DATA])
+    {
+    case ELFDATA2LSB:
+        printf("2's complement, little endian\n");
+        break;
+    case ELFDATA2MSB:
+        printf("2's complement, big endian\n");
+        break;
+    default:
+        printf("Invalid ELF data encoding\n");
+        break;
+    }
+
+    printf("  Version:                           %d\n", ehdr->e_ident[EI_VERSION]);
+
+    printf("  OS/ABI:                            ");
+    switch (ehdr->e_ident[EI_OSABI])
+    {
+    case ELFOSABI_SYSV:
+        printf("UNIX - System V\n");
+        break;
+    case ELFOSABI_NETBSD:
+        printf("UNIX - NetBSD\n");
+        break;
+    case ELFOSABI_LINUX:
+        printf("UNIX - Linux\n");
+        break;
+    default:
+        printf("<unknown: %#x>\n", ehdr->e_ident[EI_OSABI]);
+        break;
+    }
+
+    printf("  ABI Version:                       %d\n", ehdr->e_ident[EI_ABIVERSION]);
+
+    printf("  Type:                              ");
+    switch (ehdr->e_type)
+    {
+    case ET_NONE:
+        printf("NONE (Unknown type)\n");
+        break;
+    case ET_REL:
+        printf("REL (Relocatable file)\n");
+        break;
+    case ET_EXEC:
+        printf("EXEC (Executable file)\n");
+        break;
+    case ET_DYN:
+        printf("DYN (Shared object file)\n");
+        break;
+    default:
+        printf("Invalid ELF type\n");
+        break;
+    }
+
+    printf("  Entry point address:               %#lx\n", (unsigned long) ehdr->e_entry);
 }
 
 /**
@@ -99,40 +105,46 @@ void print_elf_header(Elf64_Ehdr *ehdr)
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0 on success
+ * Return: 0 on success, 98 on failure
  */
 int main(int argc, char **argv)
 {
-	int fd;
-	ssize_t bytes_read;
-	Elf64_Ehdr ehdr;
+    int fd;
+    Elf64_Ehdr ehdr;
 
-	/* check for correct usage */
-	if (argc != 2)
-		print_error_and_exit("Usage: elf_header elf_filename");
+    /* check for correct usage */
+    if (argc != 2)
+    {
+        print_error_and_exit("Usage: elf_header elf_filename");
+    }
 
-	/* open file */
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		print_error_and_exit("Error: Cannot read file");
+    /* open file */
+    fd = open(argv[1], O_RDONLY);
+    if (fd == -1)
+    {
+        print_error_and_exit("Error: Cannot read file");
+    }
 
-	/* read ELF header */
-	bytes_read = read(fd, &ehdr, sizeof(Elf64_Ehdr));
-	if (bytes_read == -1)
-		print_error_and_exit("Error: Failed to read ELF header");
-	if (bytes_read < sizeof(Elf64_Ehdr))
-		print_error_and_exit("Error: Invalid ELF header size");
+    /* read ELF header */
+    if (read(fd, &ehdr, sizeof(ehdr)) != sizeof(ehdr))
+    {
+        print_error_and_exit("Error: Failed to read ELF header");
+    }
 
-	/* check if it is a valid ELF file */
-	if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) != 0)
-		print_error_and_exit("Error: File is not an ELF");
+    /* check if it is a valid ELF file */
+    if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) != 0)
+    {
+        print_error_and_exit("Error: File is not an ELF");
+    }
 
-	/* print ELF header */
-	print_elf_header(&ehdr);
+    /* print ELF header */
+    print_elf_header(&ehdr);
 
-	/* close file */
-	if (close(fd) == -1)
-		print_error_and_exit("Error: Failed to close file");
+    /* close file */
+    if (close(fd) == -1)
+    {
+        print_error_and_exit("Error: Failed to close file");
+    }
 
-	return (0);
+    return (0);
 }
