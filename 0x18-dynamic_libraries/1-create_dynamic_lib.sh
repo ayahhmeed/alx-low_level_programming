@@ -1,2 +1,4 @@
 #!/bin/bash
-gcc -c *.c -fpic && gcc *o -shared -o liball.so
+
+gcc -Wall -pedantic -Werror -Wextra -fPIC -c libfunctions.c -o libfunctions.o
+gcc -shared -o libfunctions.so libfunctions.o
